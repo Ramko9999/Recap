@@ -1,0 +1,1 @@
+A studying web app which gamifies studying, allows users to find others who are studying the same concepts, allows users to quiz each other over video chat, and generates questions for users using AI.
