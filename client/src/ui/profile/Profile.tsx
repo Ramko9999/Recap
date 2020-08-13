@@ -18,7 +18,7 @@ const Profile = ()=>{
     const user = new User(data);
 
     if(loading){
-        return <div>Loading...</div>
+        return <div>Loading... One min...</div>
     }
     return <div>
         {`${user.getFullName()}`}
