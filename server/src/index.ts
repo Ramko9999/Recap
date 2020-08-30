@@ -1,4 +1,4 @@
-import userRouter from "./routes/user";
+import userRouter from "./routes/User";
 import express = require("express");
 import cors = require("cors");
 

@@ -1,13 +1,22 @@
 import React, {useState, useEffect} from "react";
-import UserApi from "../../api/user";
-import User from "../../model/user";
+import UserApi from "../../api/User";
+import User from "../../model/User";
+import history from "../../util/History";
+
+
+const getUserId = (path:string)=>{
+    const parts = path.split("/");
+    return parts[parts.length - 1];
+}
 
 const Profile = ()=>{
+
+    const id = getUserId(history.location.pathname);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({});
 
     useEffect(() => {
-        UserApi.getUser("f78807fd-a3b7-4d8b-8818-3d09e0e6f558").then((dat)=>{
+        UserApi.getUser(id).then((dat)=>{
             setData(dat)
         })
         .finally(()=>{
