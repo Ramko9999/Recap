@@ -7,8 +7,10 @@
     "build": "react-scripts build"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.6.2",
     "@types/react": "^16.9.45",
     "history": "^5.0.0",
+    "pdfjs-dist": "^2.6.347",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
