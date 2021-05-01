@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext} from "react";
-import { Layout, Row, Col, Menu, Modal} from "antd";
+import { Layout, Row, Col, Menu} from "antd";
 import DocumentService, { Document } from "../../service/Document";
 import { PlusOutlined, UserOutlined, SettingOutlined, StarOutlined, QuestionCircleOutlined} from "@ant-design/icons";
 import DocumentCard from "./document/DocumentCard";
 import ModalContext from "../context/ModalContext";
-import DocumentScan from "./document/DocumenScan";
+import DocumentScanModal from "./document/DocumenScanModal";
 
 const { Content, Sider } = Layout;
 const { Item, SubMenu } = Menu;
@@ -69,7 +69,7 @@ const CoreDocuments = () => {
 
 const Core = () => {
 
-    const {isScanModalOpen, setIsScanModalOpen} = useContext(ModalContext);
+    const {isScanModalOpen} = useContext(ModalContext);
 
     return (<Layout>
         <CoreSider />
@@ -81,9 +81,7 @@ const Core = () => {
                 <CoreDocuments />
             </div>
         </Content>
-        <Modal title="Scan a Document" visible={isScanModalOpen} onCancel={() => setIsScanModalOpen(false)}>
-            <DocumentScan/>
-        </Modal>
+        {isScanModalOpen && <DocumentScanModal isScanModalOpen={isScanModalOpen}/>}
     </Layout>)
 }
 

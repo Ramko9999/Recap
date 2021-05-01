@@ -1,7 +1,5 @@
 import React, {useState} from "react";
 
-
-
 const ModalContext = React.createContext({
     isScanModalOpen: false,
     setIsScanModalOpen: (b: boolean) => {},

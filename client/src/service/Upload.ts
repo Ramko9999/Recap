@@ -1,22 +1,23 @@
-import fetch from "node-fetch";
 import * as Pdf from "pdfjs-dist";
 import { PDFPageProxy } from "pdfjs-dist/types/display/api";
-import { PageViewport } from "pdfjs-dist/types/display/display_utils";
 
 export type DocumentUpload = {
+    file: File,
     fileName: string,
     fileSize: string,
     extension: string
-    preview: Blob
+    preview: Blob,
+    previewUrl: string
 };
 
 Pdf.GlobalWorkerOptions.workerSrc = "https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.js";
 
 const PREVIEW_WIDTH = 160;
 
-class UploadService{
+class UploadService {
 
     private static async toBuffer(file: File){
+
         const reader = new FileReader();
         reader.readAsArrayBuffer(file)
         return new Promise<ArrayBuffer>((resolve, reject) => {
@@ -31,7 +32,6 @@ class UploadService{
     }
 
     private static async getSnapshot(page: PDFPageProxy){
-
         const captureBlob = (ctx : CanvasRenderingContext2D) => {
             return new Promise<Blob>((resolve, reject) => {
                 ctx.canvas.toBlob((blob) => {
@@ -77,7 +77,7 @@ class UploadService{
             buffer = await UploadService.toBuffer(file); 
         }
         catch(error){
-            throw Error("failed to load the document");
+            throw Error(`Failed to load the document ${file.name}`);
         }
         const byteArray = new Uint8Array(buffer);
         const worker = new Pdf.PDFWorker({name: `PDFWorker ${new Date().toLocaleDateString()}`});
@@ -93,6 +93,10 @@ class UploadService{
         loadTask.destroy();
         worker.destroy();
         return preview as Blob;
+    }
+
+    static async uploadDocument(document:DocumentUpload){
+        
     }
 }
 
