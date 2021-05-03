@@ -5,6 +5,8 @@ import { PlusOutlined, UserOutlined, SettingOutlined, StarOutlined, QuestionCirc
 import DocumentCard from "./document/DocumentCard";
 import ModalContext from "../context/ModalContext";
 import DocumentScanModal from "./document/DocumenScanModal";
+import UserContext from "../context/UserContext";
+import { User } from "../../service/User";
 
 const { Content, Sider } = Layout;
 const { Item, SubMenu } = Menu;
@@ -12,15 +14,15 @@ const { Item, SubMenu } = Menu;
 const CoreSider = () => {
 
     const {setIsScanModalOpen} = useContext(ModalContext);
+    const {username} = useContext(UserContext) as NonNullable<User>;
     const [isSliderOpen, setIsSliderOpen] = useState(false);
-    const USERNAME = "Ramki";
 
     return (<Sider collapsible collapsed={isSliderOpen} onCollapse={setIsSliderOpen} style={{ height: "800px" }}>
         <Menu theme="dark" mode="inline">
             <Item key="Scan" onClick={() => setIsScanModalOpen(true)} icon={<PlusOutlined />}>
                 Scan
             </Item>
-            <SubMenu key={USERNAME} title={USERNAME} icon={<UserOutlined />}>
+            <SubMenu key={username} title={username} icon={<UserOutlined />}>
                 <Item key="Settings" icon={<SettingOutlined />}>
                     Settings
                 </Item>

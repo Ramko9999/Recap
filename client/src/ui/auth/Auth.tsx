@@ -9,17 +9,18 @@ const Auth = () => {
         try{
             const credential = await AuthService.signInWithGoogle();
             if(credential.user){
-                const {email, displayName} = credential.user;
-                console.log(email, displayName);
-                history.replace("/core", {});
+                history.replace("/", {});
             }
         }
         catch(error){
-            message.info(`Unable to sign in with ${error.email}`);
+            const {code} = error;
+            if(code !== "auth/cancelled-popup-request"){
+                message.info(`Unable to sign in with ${error.email}`);
+            }
         }
     }
 
-    return (<div>
+    return (<div style={{alignContent:"center"}}>
         <Button type="primary" onClick={onSignIn}>
             Login with Google
         </Button>

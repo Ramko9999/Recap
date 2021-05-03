@@ -10,7 +10,7 @@ export const UserState = ({children}: any) => {
     const [user, setUser] = useState<User>(null);
 
     useEffect(() => {
-        const userId = AuthService.getUserId();
+        const userId = AuthService.getUser().uid;
         UserService.getUser(userId).then((u) => {
             setUser(u);
             setRequestState(Request.SUCCESSFUL);

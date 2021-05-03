@@ -11,7 +11,6 @@ export type Document = {
 
 class DocumentService{
 
-    // mock fetching documents
     static async getDocuments(id:string) {
 
         const MAX_DOCUMENTS = 10;

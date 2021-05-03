@@ -7,11 +7,11 @@ class AuthService {
         return auth.currentUser !== null;
     }
 
-    static getUserId() {
+    static getUser() {
         if(!auth.currentUser) {
-            throw Error('AuthService.getUserId invoked when no user is signed in');
+            throw Error('AuthService.getUser invoked when no user is signed in');
         }
-        return auth.currentUser.uid;
+        return auth.currentUser;
     }
 
     static async signInWithGoogle() {
