@@ -11,7 +11,6 @@ import (
 func GetUser(context *gin.Context){
     userId := context.Param("id")
 	user := services.GetUser(userId)
-
 	if user == nil {
 		context.JSON(http.StatusNotFound, gin.H{
 			"error": fmt.Sprintf("User %s does not exist", userId),

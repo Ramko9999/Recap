@@ -5,6 +5,7 @@ import (
 	"recap-server/database"
 	"time"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type User struct {
@@ -19,9 +20,9 @@ type User struct {
 func GetUser(id string) *User {
 	DB := database.GetDatabase()
 	user := &User{}
-	result := DB.First(user, id)
+	result := DB.First(user, "id = ?", id)
 	if result.Error != nil {
-		log.Println(result.Error)
+		log.Println(result.Error.Error())
 		return nil
 	}
 	return user
@@ -36,9 +37,9 @@ func CreateUser(id string, email string, username string) *User {
 		Username: username,
 	}
 
-	result := DB.Create(user)
+	result := DB.Clauses(clause.OnConflict{DoNothing: true}).Create(user)
 	if result.Error != nil {
-		log.Println(result.Error)
+		log.Println(result.Error.Error())
 	}
 	return user
 }

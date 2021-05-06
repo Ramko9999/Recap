@@ -2,30 +2,47 @@ import React, {useState, useEffect} from "react";
 import AuthService from "../../service/Auth";
 import UserService, { User } from "../../service/User";
 import Request from "../../util/LoadingEnum";
+import {message} from "antd";
 
 const UserContext = React.createContext(null) as React.Context<User>;
+
 
 export const UserState = ({children}: any) => {
     const [requestState, setRequestState] = useState(Request.WAITING);
     const [user, setUser] = useState<User>(null);
 
+    const getUser = async () => {
+        const firebaseUser = AuthService.getUser();
+        try{
+            return await UserService.getUser(firebaseUser.uid);
+        }
+        catch (error) {
+            console.log(error);
+            return await UserService.createUser({
+                id: firebaseUser.uid,
+                email: firebaseUser.email as string,
+                username: firebaseUser.displayName as string,
+            })
+        }
+    }
+
     useEffect(() => {
-        const userId = AuthService.getUser().uid;
-        UserService.getUser(userId).then((u) => {
+        getUser().then((u) => {
             setUser(u);
-            setRequestState(Request.SUCCESSFUL);
-        }).catch((reason) => {
+            setRequestState(Request.SUCCESSFUL)
+        }).catch((error) => {
+            message.error(error.message);
             setRequestState(Request.FAILED);
         });
     }, []);
 
 
     if(requestState === Request.WAITING){
-        return (<div> Loading... </div>) //render loading screen
+        return (<div> Loading... </div>) 
     }
 
     if(requestState === Request.FAILED){
-        return (<div> Failed... </div>) //render failure screen
+        return (<div> Failed... </div>) 
     }
 
     return <UserContext.Provider value={user}>

@@ -1,0 +1,31 @@
+{
+  "name": "study-soul",
+  "version": "1.0.0",
+  "description": "A studying web app which generates questions for users for reading material using AI.",
+  "main": "index.js",
+  "scripts": {
+    "client-lifecycle": "ts-node ./tasks/ClientLifeCycle.ts",
+    "gin-server-lifecycle": "ts-node ./tasks/GinServerLifeCycle.ts",
+    "start": "npm run client-lifecycle&& npm run gin-server-lifecycle",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ramko9999/Study-Soul.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ramko9999/Study-Soul/issues"
+  },
+  "homepage": "https://github.com/Ramko9999/Study-Soul#readme",
+  "devDependencies": {
+    "ts-node": "^9.1.1",
+    "tsc": "^1.20150623.0",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
+}

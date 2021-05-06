@@ -32,7 +32,6 @@ func GetDatabase() *gorm.DB {
 	return DB
 }
 
-
 func CloseDatabase(db *gorm.DB) {
 	sqlDb, _ := db.DB()
 	sqlDb.Close()
