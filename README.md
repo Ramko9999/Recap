@@ -5,7 +5,7 @@ Backend: Gin-Gonic + GORM + Postgres + Go
 
 # Prerequisites
 
-## Client
+## React Client
 
 1. [Learn TypeScript](https://www.typescriptlang.org/docs/)
 
@@ -35,6 +35,16 @@ SSL_MODE=disable
 ```
 
 
-# Running the application components
+# Running the application components together
 
 Simply run ```npm start``` from root directory. The scripts in ./tasks are used perform some simple checks to make sure you have the correct files and are hooked up to ```npm start``` to run both the React application & Gin-Gonic web server.
+
+# Running the application components separately
+
+## React Client
+
+Navigate into ./client and run ```npm start```
+
+## Gin Server
+
+Navigate into ./server and run ```go run main.go```
