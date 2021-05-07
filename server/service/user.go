@@ -1,7 +1,6 @@
 package services
 
 import (
-	"log"
 	"recap-server/database"
 	"time"
 	"gorm.io/gorm"
@@ -22,14 +21,13 @@ func GetUser(id string) *User {
 	user := &User{}
 	result := DB.First(user, "id = ?", id)
 	if result.Error != nil {
-		log.Println(result.Error.Error())
 		return nil
 	}
 	return user
 }
 
 
-func CreateUser(id string, email string, username string) *User {
+func CreateUser(id string, email string, username string) (*User, error) {
 	DB := database.GetDatabase()
 	user := &User{
 		ID: id,
@@ -39,7 +37,7 @@ func CreateUser(id string, email string, username string) *User {
 
 	result := DB.Clauses(clause.OnConflict{DoNothing: true}).Create(user)
 	if result.Error != nil {
-		log.Println(result.Error.Error())
+		return nil, result.Error
 	}
-	return user
+	return user, nil
 }
