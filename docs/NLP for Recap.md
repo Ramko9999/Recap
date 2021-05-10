@@ -6,7 +6,7 @@
 			- Given this approach, I think the bigger task would be to extract questions and answers from a textbook using NLP to generate our dataset. 
 2. Generate similar, but not obvious false answers (or, would make it short answer and some how check validity to correct answer)
 	- **Approach**
-  		  - Again, data can be extracted from textbooks if they have multiple choice in the textbook questions and answers
+		- Again, data can be extracted from textbooks if they have multiple choice in the textbook questions and answers
 
 ## Model
 ### Transformers
