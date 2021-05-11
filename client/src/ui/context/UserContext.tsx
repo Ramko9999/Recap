@@ -13,17 +13,7 @@ export const UserState = ({children}: any) => {
 
     const getUser = async () => {
         const firebaseUser = AuthService.getUser();
-        try{
-            return await UserService.getUser(firebaseUser.uid);
-        }
-        catch (error) {
-            console.log(error);
-            return await UserService.createUser({
-                id: firebaseUser.uid,
-                email: firebaseUser.email as string,
-                username: firebaseUser.displayName as string,
-            })
-        }
+        return await UserService.getUser(firebaseUser.uid);
     }
 
     useEffect(() => {

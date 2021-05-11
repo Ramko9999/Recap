@@ -9,13 +9,26 @@ class AuthService {
 
     static getUser() {
         if(!auth.currentUser) {
-            throw Error('AuthService.getUser invoked when no user is signed in');
+            throw Error("cannot get user when currentUser is null");
         }
         return auth.currentUser;
     }
 
     static async signInWithGoogle() {
         return auth.signInWithPopup(googleAuthProvider);
+    }
+
+    static async getAccessToken() {
+        if(!auth.currentUser){
+            throw Error("can not access token when currentUser is null")
+        }
+        return await auth.currentUser.getIdToken(true);
+    }
+
+    static async logOut(){
+        if(auth.currentUser){
+            await auth.signOut()
+        }
     }
 }
 

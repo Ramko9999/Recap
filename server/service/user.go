@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+
 type User struct {
 	ID        string `gorm:"primaryKey;type:varchar(50)" json:"id" binding:"required"`
 	CreatedAt time.Time
@@ -15,6 +16,7 @@ type User struct {
 	Email     string `gorm:"type:varchar(50)" json:"email" binding:"required"` 
 	Username  string `gorm:"type:varchar(25)" json:"username" binding:"required"`
 }
+
 
 func GetUser(id string) *User {
 	DB := database.GetDatabase()
@@ -25,7 +27,6 @@ func GetUser(id string) *User {
 	}
 	return user
 }
-
 
 func CreateUser(id string, email string, username string) (*User, error) {
 	DB := database.GetDatabase()

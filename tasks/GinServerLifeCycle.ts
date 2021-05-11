@@ -4,9 +4,14 @@ import child_process from "child_process"
 import {error, info, success} from "./Util";
 
 function checkConfig(){
-    const envPath = join(__dirname, "..", "server", ".env");
+    const configPath = join(__dirname, "..", "server");
+    const envPath = join(configPath, ".env");
+    const firebaseServicePath = join(configPath, "firebase.json");
     if(!(existsSync(envPath))){
          error("missing .env file. create it by following directions in readme")
+    }
+    if(!existsSync(firebaseServicePath)){
+        error("missing firebase.json (server side). Ask Ramko9999 for it")
     }
     info("found all config files for gin server");
 }

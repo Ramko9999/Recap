@@ -16,16 +16,16 @@ func VerifyAccess() gin.HandlerFunc {
 			context.AbortWithStatus(http.StatusBadRequest)
 			return	
 		}
-
+		
 		tokenString := strings.TrimSpace(strings.Split(values[0], "Bearer")[1])
-		isTokenValid, err := services.VerifyAccessToken(tokenString)
-		if isTokenValid {
+		_, err := services.Auth.VerifyIDToken(context.Request.Context(), tokenString)
+		if err == nil {
 			context.Next()
 		} else{
-			canRefreshToken := strings.Contains(err.Error(), "token is expired")
-			context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"refresh": canRefreshToken,
+			context.AbortWithStatusJSON(http.StatusUnauthorized, &gin.H{
+				"error": err.Error(),
 			})
 		}
+		
 	}
 }

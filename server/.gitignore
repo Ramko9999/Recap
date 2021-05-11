@@ -3,3 +3,6 @@
 
 # environment variables
 .env
+
+# firebase config
+firebase.json

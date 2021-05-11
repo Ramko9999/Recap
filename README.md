@@ -34,6 +34,10 @@ PASSWORD=...
 SSL_MODE=disable
 ```
 
+4. Ensure you have firebase.json (firebase project credentials)
+
+Ask Ramko9999 if you don't have them
+
 
 # Running the application components together
 

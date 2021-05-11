@@ -18,27 +18,28 @@ func getLog() *os.File {
 }
 
 func main() {
-
 	err := godotenv.Load()
 	if err != nil {
 		panic("Unable to load environment variables")
 	}
 	
-
 	logFile := getLog()
+	defer logFile.Close()
+
 	gin.DefaultWriter = io.MultiWriter(logFile, os.Stdout)
+	
 	DB := database.GetDatabase()
-
 	DB.AutoMigrate(&services.User{})
+	defer database.CloseDatabase(DB)
 
+	services.CreateAuth()
 	engine := gin.Default()
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
+	corsConfig.AllowHeaders = []string{"Authorization"}
 
 	engine.Use(cors.New(corsConfig))
 	routes.AddUserRoutes(engine)
-	routes.AddAuthRoutes(engine)
-
 	engine.Run("127.0.0.1:8080")
 }
