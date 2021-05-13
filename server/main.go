@@ -3,7 +3,6 @@ package main
 import (
 	"io"
 	"os"
-	"recap-server/database"
 	"recap-server/route"
 	"recap-server/service"
 	"github.com/gin-contrib/cors"
@@ -11,11 +10,11 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func getLog() *os.File {
-	logPath := "gin.log"
-	logFile, _ := os.Create(logPath)
-	return logFile
-}
+
+
+const (
+	LOG_PATH = "gin.log"
+)
 
 func main() {
 	err := godotenv.Load()
@@ -23,14 +22,20 @@ func main() {
 		panic("Unable to load environment variables")
 	}
 	
-	logFile := getLog()
+	logFile, _ := os.Create(LOG_PATH)
 	defer logFile.Close()
 
 	gin.DefaultWriter = io.MultiWriter(logFile, os.Stdout)
-	
-	DB := database.GetDatabase()
-	DB.AutoMigrate(&services.User{})
-	defer database.CloseDatabase(DB)
+
+	services.CreateDatabase(&services.DatabaseConfig{
+		Host: os.Getenv("HOST"),
+		Port: os.Getenv("PORT"),
+		Name: os.Getenv("NAME"),
+		User: os.Getenv("USER"),
+		Password: os.Getenv("PASSWORD"),
+		SslMode: os.Getenv("SSL_MODE"),
+	})
+	defer services.CloseDatabase(services.DB)
 
 	services.CreateAuth()
 	engine := gin.Default()
@@ -41,5 +46,6 @@ func main() {
 
 	engine.Use(cors.New(corsConfig))
 	routes.AddUserRoutes(engine)
+	routes.AddDocumentRoutes(engine)
 	engine.Run("127.0.0.1:8080")
 }

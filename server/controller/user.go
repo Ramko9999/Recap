@@ -10,8 +10,7 @@ func GetUser(context *gin.Context){
     userId := context.Param("id")
 	user := services.GetUser(userId)
 	if user == nil {
-		context.Status(http.StatusNotFound)
-		return
+		context.AbortWithStatus(http.StatusNotFound)
 	}
 	context.JSON(http.StatusOK, user)
 }
@@ -19,16 +18,14 @@ func GetUser(context *gin.Context){
 func CreateUser(context *gin.Context){
 	var body services.User
 	if err := context.ShouldBindJSON(&body); err != nil {
-		context.Status(http.StatusBadRequest)
-		return
+		context.AbortWithStatus(http.StatusBadRequest)
 	}
 	
 	user, err := services.CreateUser(body.ID, body.Email, body.Username)
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
-		return
 	}
 	context.JSON(http.StatusCreated, user)
 }

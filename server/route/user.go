@@ -8,7 +8,7 @@ import (
 
 func AddUserRoutes(engine *gin.Engine){
 	userRouter := engine.Group("/user")
-	userRouter.Use(middleware.VerifyAccess())
+	userRouter.Use(middleware.JWT())
 	{
 		userRouter.GET("/:id", controllers.GetUser)
 		userRouter.POST("/create", controllers.CreateUser)

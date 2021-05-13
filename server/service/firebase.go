@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"context"
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
@@ -14,10 +15,10 @@ func CreateAuth(){
 	backgroundCtx := context.Background()
 	app, err := firebase.NewApp(backgroundCtx, &firebase.Config{}, opt)
 	if err != nil {
-		panic(err.Error())
+		panic(fmt.Sprintf("Failed to create a firebase app: %s", err.Error()))
 	}
 	if authClient, err := app.Auth(backgroundCtx); err != nil {
-		panic(err.Error())
+		panic(fmt.Sprintf("Failed to create an firebase auth instance: %s", err.Error()))
 	} else {
 		Auth = authClient
 	}

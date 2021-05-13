@@ -19,7 +19,7 @@ Backend: Gin-Gonic + GORM + Postgres + Go
 
 3. Set up Postgres
 
-Once you installed Postgres, enter the PSQL shell & create a new database with the name ```recap_db```
+Once you installed Postgres, enter the PSQL shell & create 2 new databases with the names ```recap_db``` and ```recap_db_test```. ```recap_db``` will refer to our development database and ```recap_db_test``` refers to our testing database to use when running tests. 
 
 GORM will take care of creating schema.
 
@@ -32,6 +32,15 @@ NAME=recap_db
 USER=...
 PASSWORD=...
 SSL_MODE=disable
+
+
+TEST_PORT=...
+TEST_HOST=...
+TEST_NAME=recap_db_test
+TEST_USER=...
+TEST_PASSWORD=...
+TEST_SSL_MODE=disable
+
 ```
 
 4. Ensure you have firebase.json (firebase project credentials)
@@ -52,3 +61,14 @@ Navigate into ./client and run ```npm start```
 ## Gin Server
 
 Navigate into ./server and run ```go run main.go```
+
+# Running application tests
+
+## React Client
+
+Don't have testing setup yet
+
+## Gin Server
+
+Navigate into ./server and run ```go test``` or for more verbosity ```go test -v```
+

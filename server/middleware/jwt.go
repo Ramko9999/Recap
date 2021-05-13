@@ -8,7 +8,7 @@ import (
 )
 
 
-func VerifyAccess() gin.HandlerFunc {
+func JWT() gin.HandlerFunc {
 
 	return func(context *gin.Context){
 		values, ok := context.Request.Header["Authorization"]
@@ -19,6 +19,7 @@ func VerifyAccess() gin.HandlerFunc {
 		
 		tokenString := strings.TrimSpace(strings.Split(values[0], "Bearer")[1])
 		_, err := services.Auth.VerifyIDToken(context.Request.Context(), tokenString)
+
 		if err == nil {
 			context.Next()
 		} else{
