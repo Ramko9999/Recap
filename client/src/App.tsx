@@ -7,6 +7,7 @@ import Protected from "./util/Protected";
 import { ModalState } from "./ui/context/ModalContext";
 import { UserState } from "./ui/context/UserContext";
 import Core from "./ui/core/Core";
+import { DocumentState } from "./ui/context/DocumentContext";
 
 function App() {
   return (
@@ -19,9 +20,11 @@ function App() {
           <Route exact path="/login" component={Auth}></Route>
           <Protected path="/">
             <UserState>
-              <ModalState>
-                <Route path="/home" component={Core} />
-              </ModalState>
+              <DocumentState>
+                <ModalState>
+                  <Route path="/home" component={Core} />
+                </ModalState>
+              </DocumentState>
             </UserState>
           </Protected>
         </Switch>

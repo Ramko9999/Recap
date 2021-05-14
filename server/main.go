@@ -42,7 +42,7 @@ func main() {
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
-	corsConfig.AllowHeaders = []string{"Authorization"}
+	corsConfig.AllowHeaders = []string{"Authorization", "Content-Type"}
 
 	engine.Use(cors.New(corsConfig))
 	routes.AddUserRoutes(engine)

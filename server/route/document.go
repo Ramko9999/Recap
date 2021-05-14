@@ -13,6 +13,6 @@ func AddDocumentRoutes(engine *gin.Engine) {
 	{
 		documentRouter.GET("/all/:userId", controllers.GetDocuments)
 		documentRouter.POST("/create", controllers.CreateDocument)
-		documentRouter.DELETE("/delete/:id", controllers.DeleteDocument)
+		documentRouter.DELETE("/:id", controllers.DeleteDocument)
 	}
 }

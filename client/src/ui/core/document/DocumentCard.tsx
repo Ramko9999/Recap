@@ -6,29 +6,23 @@ type Props = {
     document: Document
 }
 
-const DOCUMENT_STATE = {
-    FINISHED: "FINISHED",
-    QUEUED: "QUEUED",
-    SCANNING: "SCANNING"
-};
-
 const { Meta } = Card;
 
 const DocumentCard = ({ document }: Props) => {
 
-    const { preview, uploadedAt, name} = document;
+    const {previewUrl, createdAt, name} = document;
 
     const getDocumentPreview = () => {
-        return (<img alt="" src={preview} height="150px" />);
+        return (<img alt="" src={previewUrl} height="160px" />);
     }
 
     const getDocumentMeta = () => {
-        return (<div style={{ height: "40px" }}>
-            <Meta title={name} description={uploadedAt.toLocaleDateString()} />
+        return (<div style={{ height: "50px", borderTopWidth: "5px", borderTopColor: "black"}}>
+            <Meta title={name} description={createdAt.toLocaleDateString()} />
         </div>);
     };
 
-    return (<Card hoverable cover={getDocumentPreview()} style={{ width: "160px" }}>
+    return (<Card hoverable cover={getDocumentPreview()} style={{ width: "170px" }}>
         {getDocumentMeta()}
     </Card>);
 };

@@ -1,18 +1,18 @@
 import React, {useState} from "react";
 
 const ModalContext = React.createContext({
-    isScanModalOpen: false,
-    setIsScanModalOpen: (b: boolean) => {},
+    isUploadModalOpen: false,
+    setIsUploadModalOpen: (b: boolean) => {},
 
 });
 
 export const ModalState = ({children}: any) => {
-    const [isScanModalOpen, setIsScanModalOpen] = useState(false);
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
     return (<ModalContext.Provider value={
         {
-            isScanModalOpen: isScanModalOpen,
-            setIsScanModalOpen: setIsScanModalOpen,
+            isUploadModalOpen: isUploadModalOpen,
+            setIsUploadModalOpen: setIsUploadModalOpen,
         }
     }>
         {children}

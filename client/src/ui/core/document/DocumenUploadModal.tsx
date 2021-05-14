@@ -1,8 +1,9 @@
 import React, {useState, useContext} from "react";
 import {Upload, message, Modal} from "antd";
 import {InboxOutlined } from "@ant-design/icons";
-import UploadService, {DocumentUpload} from "../../../service/Upload";
+import DocumentService, {DocumentUpload} from "../../../service/Document";
 import ModalContext from "../../context/ModalContext";
+import DocumentContext from "../../context/DocumentContext";
 
 const {Dragger} = Upload;
 
@@ -22,21 +23,24 @@ const DocumentUploader = ({onUploadFinished} : DocumentUploaderProps) => {
             return;
         }
     
-        const {name, type, size} = info.file;
+        const {name, size} = info.file;
 
         if(status === "error"){
             message.error(`An error occured while uploading file ${name}.`);
             return;
         }
     
-        const preview = await UploadService.generatePreviewBlob(info.file.originFileObj);
+        const fileObject = info.file.originFileObj;
+        const documentName = name.split(".")[0];
+
+        const preview = await DocumentService.generatePreviewBlob(fileObject);
         const previewUrl = URL.createObjectURL(preview);
-    
+        
+
         onUploadFinished({
-            file: info.file,
-            fileName: name,
-            fileSize: size,
-            extension: type,
+            file: fileObject,
+            name: documentName,
+            size,
             preview,
             previewUrl
         });
@@ -58,35 +62,37 @@ type DocumentConfirmationProps = {
 
 const DocumentConfirmation = ({documentUpload} : DocumentConfirmationProps) => {
     
-    const {fileName, fileSize, extension, preview, previewUrl}  = documentUpload;
+    const {name, previewUrl}  = documentUpload;
     
     return (<div>
         <img src={previewUrl} alt=""/>
-        <span>{"Preview of " + fileName}</span>
+        <span>{"Preview of " + name}</span>
         </div>)
 }
 
 
-type DocumentScanModalProps = {
-    isScanModalOpen: boolean
+type DocumentUploadModalProps = {
+    isUploadModalOpen: boolean
 };
 
-const DocumentScanModal = ({isScanModalOpen}: DocumentScanModalProps) => {
+const DocumentUploadModal = ({isUploadModalOpen}: DocumentUploadModalProps) => {
 
     const [index, setIndex] = useState(0);
     const [documentUpload, setLocalUpload] = useState<DocumentUpload | null>(null);
 
-    const {setIsScanModalOpen} = useContext(ModalContext);
+    const {setIsUploadModalOpen} = useContext(ModalContext);
+    const {addDocument} = useContext(DocumentContext);
 
     const onOk = async () => {
         if(documentUpload){
-            await UploadService.uploadDocument(documentUpload);
-            message.success(`The document ${documentUpload.fileName} was uploaded successfully!`);
-            setIsScanModalOpen(false);
+            const createdDocument = await DocumentService.createDocument(documentUpload);
+            setIsUploadModalOpen(false);
+            addDocument(createdDocument);
+            message.success(`The document ${documentUpload.name} was uploaded successfully!`);
         }
     };
     
-    const getScanPhase = () => {
+    const getUploadPhase = () => {
         switch (index){
             case 0:
                 return (<DocumentUploader onUploadFinished={(documentUpload) => {
@@ -108,11 +114,11 @@ const DocumentScanModal = ({isScanModalOpen}: DocumentScanModalProps) => {
     };
 
     return (<div> 
-        <Modal title="Scan a Document"  visible={isScanModalOpen} okButtonProps={okButtonProps} onCancel={() => setIsScanModalOpen(false)} onOk={onOk}>
-        {getScanPhase()}
+        <Modal title="Scan a Document"  visible={isUploadModalOpen} okButtonProps={okButtonProps} onCancel={() => setIsUploadModalOpen(false)} onOk={onOk}>
+        {getUploadPhase()}
         </Modal>
     </div>);
 }
 
 
-export default DocumentScanModal;
+export default DocumentUploadModal;

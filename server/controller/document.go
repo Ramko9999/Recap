@@ -11,7 +11,9 @@ func GetDocuments(context *gin.Context) {
 	userId := context.Param("userId")
 	documents, err := services.GetDocuments(userId);
 	if err != nil {
-		context.AbortWithStatus(http.StatusNotFound)
+		context.AbortWithStatusJSON(http.StatusInternalServerError, &gin.H{
+			"error": err.Error(),
+		})
 	}
 	context.JSON(http.StatusOK, documents)
 }
@@ -28,7 +30,7 @@ func CreateDocument(context *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
-		context.JSON(http.StatusCreated, document)
+		context.JSON(http.StatusAccepted, document)
 	}
 }
 
