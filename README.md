@@ -1,4 +1,4 @@
-A studying web app which generates questions & summarize reading material for users using NLP.
+A studying web app which generates questions & summarize reading material for users using NLP (Work in Progress Lol).
 
 Frontend: React + TypeScript
 Backend: Gin-Gonic + GORM + Postgres + Go
@@ -23,7 +23,7 @@ Once you installed Postgres, enter the PSQL shell & create 2 new databases with 
 
 GORM will take care of creating schema.
 
-Create a .env file in ./server. This file will contain the Postgres instance credentials. Here is what should be in it:
+Create a .env file in ./server/gin. This file will contain the Postgres instance credentials. Here is what should be in it:
 
 ```
 PORT=...
@@ -44,14 +44,9 @@ TEST_SSL_MODE=disable
 ```
 
 4. Ensure you have firebase.json (firebase project credentials)
-
-Ask Ramko9999 if you don't have them
-
-
 # Running the application components together
 
-Simply run ```npm start``` from root directory. The scripts in ./tasks are used perform some simple checks to make sure you have the correct files and are hooked up to ```npm start``` to run both the React application & Gin-Gonic web server.
-
+Simply run ```npm start``` from root directory. 
 # Running the application components separately
 
 ## React Client
