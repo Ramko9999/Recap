@@ -1,4 +1,4 @@
-A studying web app which generates questions & summarize reading material for users using NLP.
+A studying web app which generates questions & summarize reading material for users using NLP (Work in Progress Lol).
 
 Frontend: React + TypeScript
 Backend:
@@ -82,15 +82,10 @@ TEST_SSL_MODE=disable
 
 ```
 
-4. Ensure you have firebase.json in ./server/gin (firebase project credentials)
-
-Ask Ramko9999 if you don't have them
-
-
+4. Ensure you have firebase.json (firebase project credentials)
 # Running the application components together
 
-Simply run ```npm start``` from root directory. The scripts in ./tasks are used perform some simple checks to make sure you have the correct files and are hooked up to ```npm start``` to run both the React application & Gin-Gonic web server.
-
+Simply run ```npm start``` from root directory. 
 # Running the application components separately
 
 ## React Client
