@@ -19,7 +19,7 @@ export const UserState = ({children}: any) => {
     useEffect(() => {
         getUser().then((u) => {
             setUser(u);
-            setRequestState(Request.SUCCESSFUL)
+            setRequestState(Request.SUCCESSFUL);
         }).catch((error) => {
             message.error(error.message);
             setRequestState(Request.FAILED);

@@ -21,7 +21,7 @@ type User struct {
 
 func GetUser(id string) *User {
 	user := &User{}
-	result := DB.First(user, "id = ?", id)
+	result := PSQL.DB.First(user, "id = ?", id)
 	if result.Error != nil {
 		return nil
 	}
@@ -35,7 +35,7 @@ func CreateUser(id string, email string, username string) (*User, error) {
 		Username: username,
 	}
 
-	result := DB.Clauses(clause.OnConflict{DoNothing: true}).Create(user)
+	result := PSQL.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(user)
 	if result.Error != nil {
 		return nil, result.Error
 	}

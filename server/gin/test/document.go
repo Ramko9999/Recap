@@ -11,38 +11,44 @@ const DOCUMENT_CREATOR = "Document Creator's Id"
 
 
 func isCreationEqualToDocument (creation services.DocumentCreation, document services.Document) bool {
-	return (creation.Name == document.Name && creation.UserID == document.UserID && creation.Size == document.Size && creation.PreviewUrl == document.PreviewUrl && creation.BlobUrl == document.BlobUrl)
+	return (creation.Name == document.Name && creation.UserId == document.UserID && creation.Size == document.Size && creation.PreviewUrl == document.PreviewUrl && creation.DocumentUrl == document.DocumentUrl)
 }
 
 func TestCreatingDocuments(t *testing.T){
 
 	documentCreations := []services.DocumentCreation{
 		{
-			UserID: DOCUMENT_CREATOR,
+			UserId: DOCUMENT_CREATOR,
 			Name: "History Book",
 			PreviewUrl: "http://localhost:9090/preview/history-book",
-			BlobUrl: "http://localhost:9090/blob/history-book",
+			DocumentUrl: "http://localhost:9090/blob/history-book",
+			PreviewBlobId: "1",
+			DocumentBlobId: "1d",
 			Size: 9891,
 		},
 		{
-			UserID: DOCUMENT_CREATOR,
+			UserId: DOCUMENT_CREATOR,
 			Name: "Science Book",
 			PreviewUrl: "http://localhost:9090/preview/science-book",
-			BlobUrl: "http://localhost:9090/blob/science-book",
+			DocumentUrl: "http://localhost:9090/blob/science-book",
+			PreviewBlobId: "2",
+			DocumentBlobId: "2d",
 			Size: 17291,
 		},
 		{
-			UserID: DOCUMENT_CREATOR,
+			UserId: DOCUMENT_CREATOR,
 			Name: "Math Book",
 			PreviewUrl: "http://localhost:9090/preview/math-book",
-			BlobUrl: "http://localhost:9090/blob/math-book",
+			DocumentUrl: "http://localhost:9090/blob/math-book",
+			PreviewBlobId: "3",
+			DocumentBlobId: "3d",
 			Size: 1421,
 		},
 	}
 
 	for _, documentCreation := range(documentCreations) {
 		if _, err := services.CreateDocument(documentCreation); err != nil {
-			t.Errorf("Unexpected error when creating document %s %s", documentCreation.UserID, err.Error())
+			t.Errorf("Unexpected error when creating document %s %s", documentCreation.UserId, err.Error())
 		}
 	}
 

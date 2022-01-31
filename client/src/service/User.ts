@@ -13,7 +13,6 @@ export type User = {
 class UserService {
 
     static async getUser(id: string) : Promise<NonNullable<User>> {
-
         const url = new URL(`/user/${id}`, SERVICE_URL);
         const headers = {
             "Authorization": `Bearer ${await AuthService.getAccessToken()}`
@@ -24,7 +23,7 @@ class UserService {
         });
 
         if(response.status === StatusCodes.NOT_FOUND){
-            throw Error(`User ${id} does not exist`);
+            throw Error(`user ${id} does not exist`);
         }
 
         const body: any = await response.json();
@@ -48,7 +47,7 @@ class UserService {
         });
         
         if(response.status === StatusCodes.BAD_REQUEST){
-            throw Error("Invalid request body");
+            throw Error("invalid request body");
         }
 
         const body = await response.json();

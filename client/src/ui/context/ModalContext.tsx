@@ -3,7 +3,6 @@ import React, {useState} from "react";
 const ModalContext = React.createContext({
     isUploadModalOpen: false,
     setIsUploadModalOpen: (b: boolean) => {},
-
 });
 
 export const ModalState = ({children}: any) => {

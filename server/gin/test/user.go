@@ -17,7 +17,7 @@ func TestCreateNewUser(t *testing.T) {
 		t.Errorf("Unexpected error when creating a user %s", err.Error())
 	} else {
 		if !user.Equals(createdUser){
-			t.Errorf("Expected user %s is not Actual User %s", user.String(), createdUser.String())
+			t.Errorf("Expected user %s is not Actual user %s", user.String(), createdUser.String())
 		}
 	}	
 }

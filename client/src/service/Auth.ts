@@ -1,5 +1,4 @@
-import {auth, googleAuthProvider} from "./Firebase";
-
+import {auth, googleAuthProvider, LOCAL_PERSISTANCE} from "./Firebase";
 
 class AuthService {
 
@@ -18,9 +17,18 @@ class AuthService {
         return auth.signInWithPopup(googleAuthProvider);
     }
 
+    static async staySignedIn(){
+        try{
+            await auth.setPersistence(LOCAL_PERSISTANCE);
+        }
+        catch(error){
+            throw Error(error.message)
+        }
+    }
+
     static async getAccessToken() {
         if(!auth.currentUser){
-            throw Error("can not access token when currentUser is null")
+            throw Error("cannot access token when currentUser is null")
         }
         return await auth.currentUser.getIdToken(true);
     }
@@ -31,6 +39,5 @@ class AuthService {
         }
     }
 }
-
 
 export default AuthService;

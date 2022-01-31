@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"recap-server/service"
 	"github.com/gin-gonic/gin"
+	"fmt"
 )
-
 
 func GetDocuments(context *gin.Context) {
 	userId := context.Param("userId")
@@ -25,7 +25,21 @@ func CreateDocument(context *gin.Context) {
 		context.AbortWithStatus(http.StatusBadRequest)
 	}
 
-	if document, err := services.CreateDocument(body); err != nil{
+	document, err := services.CreateDocument(body);
+	if err != nil{
+		context.AbortWithStatusJSON(http.StatusInternalServerError, &gin.H{
+			"error": err.Error(),
+		})
+	} 
+
+	job := &services.DocumentJob{
+		UserId: body.UserId,
+		DocumentId: document.ID,
+	}
+
+	if err := services.PutDocumentInQueue(job); err != nil {
+		gin.DefaultWriter.Write([]byte(fmt.Sprintf("failed to write document job to broker %s", err.Error())))
+		services.DeleteDocument(document.ID) // delete document from db to clean up
 		context.AbortWithStatusJSON(http.StatusInternalServerError, &gin.H{
 			"error": err.Error(),
 		})
@@ -42,4 +56,19 @@ func DeleteDocument(context *gin.Context) {
 		})
 	}
 	context.Status(http.StatusOK)
+}
+
+func PutDocumentInQueue(context *gin.Context) {
+	job := &services.DocumentJob{
+		DocumentId: context.Query("documentId"),
+		UserId: context.Query("userId"),
+	}
+
+	if err := services.PutDocumentInQueue(job); err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, &gin.H{
+			"error" : err.Error(),
+		})
+	} else {
+		context.Status(http.StatusAccepted)
+	}
 }

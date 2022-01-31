@@ -16,6 +16,7 @@ const Auth = () => {
                     username: credential.user?.displayName as string
                 })
             }
+            await AuthService.staySignedIn();
             if(credential.user){
                 history.replace("/", {});
             }
@@ -28,7 +29,8 @@ const Auth = () => {
         }
     }
 
-    return (<div style={{alignContent:"center"}}>
+    return (
+    <div style={{alignContent:"center", textAlign: "center"}}>
         <Button type="primary" onClick={onSignIn}>
             Login with Google
         </Button>

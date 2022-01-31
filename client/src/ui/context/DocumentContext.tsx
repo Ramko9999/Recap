@@ -12,8 +12,8 @@ type DocumentContextType = {
     viewDocument: (docId: string) => void,
     documentInView: Document | null
     documentRequestStatus: Request
-
 }
+
 const DocumentContext = React.createContext({
     documents: [],
     addDocument: (doc: Document) => {},
@@ -47,12 +47,11 @@ export const DocumentState = ({children}: DocumentStateProps) => {
     const viewDocument = (documentId: string) => {
         const queriedDocuments = documents.filter((document) => document.id === documentId);
         if(queriedDocuments.length === 0){
-            throw Error(`View intended document ${documentId} does not exist in the store`)
+            throw Error(`view intended document ${documentId} does not exist`)
         }
         const viewIntendedDocument = queriedDocuments[0];
         setDocumentInView(viewIntendedDocument)
     }
-
     useEffect(() => {
         DocumentService.getDocuments(AuthService.getUser().uid).then((docs) => {
             setDocuments(docs);

@@ -10,22 +10,19 @@ import (
 	"github.com/joho/godotenv"
 )
 
-
-
 const (
 	LOG_PATH = "gin.log"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		panic("Unable to load environment variables")
 	}
 	
 	logFile, _ := os.Create(LOG_PATH)
 	defer logFile.Close()
 
-	gin.DefaultWriter = io.MultiWriter(logFile, os.Stdout)
+	gin.DefaultWriter = io.MultiWriter(logFile, os.Stdout);
 
 	services.CreateDatabase(&services.DatabaseConfig{
 		Host: os.Getenv("HOST"),
@@ -34,10 +31,15 @@ func main() {
 		User: os.Getenv("USER"),
 		Password: os.Getenv("PASSWORD"),
 		SslMode: os.Getenv("SSL_MODE"),
-	})
-	defer services.CloseDatabase(services.DB)
+	}, gin.DefaultWriter)
 
-	services.CreateAuth()
+	defer services.PSQL.Close()
+
+	services.InitFirebaseServices()
+	services.InitMessageQueue(gin.DefaultWriter)
+
+	defer services.MQ.Close()
+
 	engine := gin.Default()
 
 	corsConfig := cors.DefaultConfig()

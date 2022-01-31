@@ -4,6 +4,7 @@ import (
 	"time"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"encoding/json"
 )
 
 type Document struct {
@@ -13,7 +14,9 @@ type Document struct {
 	DeletedAt 	gorm.DeletedAt `gorm:"index"`
 	Name 	  	string `gorm:"type:text" json:"name"`
 	PreviewUrl	string `gorm:"type:text" json:"previewUrl"`
-	BlobUrl 	string `gorm:"type:text" json:"blobUrl"`
+	DocumentUrl string `gorm:"type:text" json:"documentUrl"`
+	PreviewBlobId string `gorm:"type:text" json:"previewBlobId"`
+	DocumentBlobId string `gorm:"type:text" json:"documentBlobId"`
 	Size 		int `gorm:"type:int" json:"size"`
 	State 		string `gorm:"type:varchar(25)" json:"state"`
 	JobError 	string `gorm:"type:text" json:"jobError"`
@@ -21,11 +24,18 @@ type Document struct {
 }
 
 type DocumentCreation struct {
-	UserID 		string `json:"userId" binding:"required"`
+	UserId 		string `json:"userId" binding:"required"`
 	Name   		string `json:"name" binding:"required"`
 	PreviewUrl 	string `json:"previewUrl" binding:"required"`
-	BlobUrl 	string `json:"blobUrl" binding:"required"`
+	DocumentUrl string `json:"documentUrl" binding:"required"`
+	PreviewBlobId string `json:"previewBlobId" binding:"required"`
+	DocumentBlobId string `json:"documentBlobId" binding:"required"`
 	Size 		int    `json:"size" binding:"required"`
+}
+
+type DocumentJob struct {
+	UserId string `json:"userId"`
+	DocumentId string `json:"documentId"`
 }
 
 const (
@@ -34,11 +44,8 @@ const (
 
 func GetDocuments(userId string) (*[]Document, error) {
 	var documents []Document 
-
-	result := DB.Where("user_id = ?", userId).Find(&documents)
-	if result.Error != nil {
-		return nil, result.Error
-	}
+	result := PSQL.DB.Where("user_id = ?", userId).Find(&documents).Order("created_at DESC")
+	if result.Error != nil { return nil, result.Error }
 	return &documents, nil
 }
 
@@ -48,23 +55,30 @@ func CreateDocument(creation DocumentCreation) (*Document, error) {
 		ID: documentId,
 		Name: creation.Name,
 		PreviewUrl: creation.PreviewUrl,
-		BlobUrl: creation.BlobUrl,
+		DocumentUrl: creation.DocumentUrl,
+		PreviewBlobId: creation.PreviewBlobId,
+		DocumentBlobId: creation.DocumentBlobId,
 		Size: creation.Size,
 		State: QUEUED,
 		JobError: "",
-		UserID: creation.UserID,
+		UserID: creation.UserId,
 	}
-	if result := DB.Create(document); result.Error != nil {
+	
+	if result := PSQL.DB.Create(document); result.Error != nil {
 		return nil, result.Error
+	} 
+
+	return document, nil
+}
+
+func PutDocumentInQueue(job *DocumentJob) error {
+	if marshal, err := json.Marshal(job); err != nil {
+		return err
 	} else {
-		// add to document to message queue
-		return document, nil
+		return MQ.Push(marshal)
 	}
 }
 
 func DeleteDocument(documentId string) error {
-	if result := DB.Where("id = ?", documentId).Delete(&Document{}); result.Error != nil {
-		return result.Error
-	}
-	return nil
+	return PSQL.DB.Where("id = ?", documentId).Delete(&Document{}).Error
 }

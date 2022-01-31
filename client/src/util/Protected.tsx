@@ -4,7 +4,7 @@ import AuthService from "../service/Auth";
 
 type ProtectedProps = {
     path:string,
-    children: any
+    children:any
 }
 
 const Protected = ({path, children} : ProtectedProps) => {

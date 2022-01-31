@@ -4,7 +4,7 @@ import child_process from "child_process"
 import {error, info, success} from "./Util";
 
 function checkConfig(){
-    const configPath = join(__dirname, "..", "server");
+    const configPath = join(__dirname, "..", "server", "gin");
     const envPath = join(configPath, ".env");
     const firebaseServicePath = join(configPath, "firebase.json");
     if(!(existsSync(envPath))){
@@ -18,7 +18,7 @@ function checkConfig(){
 
 function runGin(){
     const options = {
-        cwd: "./server"
+        cwd: "./server/gin"
     }
     info("spawning a new shell/cmd to run gin server");
     child_process.exec("start cmd.exe /K go run main.go", options);

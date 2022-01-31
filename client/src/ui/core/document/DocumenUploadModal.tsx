@@ -1,7 +1,7 @@
 import React, {useState, useContext} from "react";
 import {Upload, message, Modal} from "antd";
 import {InboxOutlined } from "@ant-design/icons";
-import DocumentService, {DocumentUpload} from "../../../service/Document";
+import DocumentService, {DocumentUpload, MAX_UPLOAD_SIZE} from "../../../service/Document";
 import ModalContext from "../../context/ModalContext";
 import DocumentContext from "../../context/DocumentContext";
 
@@ -26,7 +26,7 @@ const DocumentUploader = ({onUploadFinished} : DocumentUploaderProps) => {
         const {name, size} = info.file;
 
         if(status === "error"){
-            message.error(`An error occured while uploading file ${name}.`);
+            message.error(`an error occured while uploading file ${name}.`);
             return;
         }
     
@@ -36,7 +36,6 @@ const DocumentUploader = ({onUploadFinished} : DocumentUploaderProps) => {
         const preview = await DocumentService.generatePreviewBlob(fileObject);
         const previewUrl = URL.createObjectURL(preview);
         
-
         onUploadFinished({
             file: fileObject,
             name: documentName,
@@ -47,7 +46,14 @@ const DocumentUploader = ({onUploadFinished} : DocumentUploaderProps) => {
     }
 
     return (<Dragger name="file" accept=".pdf" multiple={false} onChange={(info) => onUploadChangeEvent(info, onUploadFinished)}
-                     customRequest={(o) => {noop(o)}}>
+                     customRequest={(o) => {noop(o)}} beforeUpload={(file, files) => {
+                         const {size, name} = file;
+                         if(size > MAX_UPLOAD_SIZE){
+                             message.error(`file size of ${name} is too great. Must be less than 5 MB`)
+                             return false;
+                         }
+                         return true;
+                     }}>
             <div>
                 <InboxOutlined/>
             </div>
@@ -79,16 +85,25 @@ const DocumentUploadModal = ({isUploadModalOpen}: DocumentUploadModalProps) => {
 
     const [index, setIndex] = useState(0);
     const [documentUpload, setLocalUpload] = useState<DocumentUpload | null>(null);
+    const [isDocumentCreationLoading, setIsDocumentCreationLoading] = useState(false);
 
     const {setIsUploadModalOpen} = useContext(ModalContext);
     const {addDocument} = useContext(DocumentContext);
 
     const onOk = async () => {
         if(documentUpload){
-            const createdDocument = await DocumentService.createDocument(documentUpload);
-            setIsUploadModalOpen(false);
-            addDocument(createdDocument);
-            message.success(`The document ${documentUpload.name} was uploaded successfully!`);
+            setIsDocumentCreationLoading(true);
+            try {
+                const createdDocument = await DocumentService.createDocument(documentUpload);
+                setIsDocumentCreationLoading(false);
+                setIsUploadModalOpen(false);
+                addDocument(createdDocument);
+                message.success(`${documentUpload.name} was uploaded successfully!`);
+            }
+            catch(error){
+                setIsDocumentCreationLoading(false);
+                message.error(error.message);
+            }
         }
     };
     
@@ -114,8 +129,8 @@ const DocumentUploadModal = ({isUploadModalOpen}: DocumentUploadModalProps) => {
     };
 
     return (<div> 
-        <Modal title="Scan a Document"  visible={isUploadModalOpen} okButtonProps={okButtonProps} onCancel={() => setIsUploadModalOpen(false)} onOk={onOk}>
-        {getUploadPhase()}
+        <Modal title="Upload a Document"  visible={isUploadModalOpen} okButtonProps={okButtonProps} confirmLoading={isDocumentCreationLoading} onCancel={() => setIsUploadModalOpen(false)} onOk={onOk}>
+            {getUploadPhase()}
         </Modal>
     </div>);
 }

@@ -5,7 +5,6 @@ import {Row, Col} from "antd";
 import DocumentCard from "./DocumentCard";
 import Request from "../../../util/LoadingEnum";
 
-
 const DocumentGallery = () => {
     const {documents, documentRequestStatus} = useContext(DocumentContext);
 

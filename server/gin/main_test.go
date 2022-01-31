@@ -39,11 +39,11 @@ func TestMain(m *testing.M){
 		User: os.Getenv("TEST_USER"),
 		Password: os.Getenv("TEST_PASSWORD"),
 		SslMode: os.Getenv("TEST_SSL_MODE"),
-	})
+	}, os.Stdout)
 
 	defer func (){
-		services.DB.Migrator().DropTable(&services.User{}, &services.Document{})
-		services.CloseDatabase(services.DB)
+		services.PSQL.DB.Migrator().DropTable(&services.User{}, &services.Document{})
+		services.PSQL.Close()
 	}()
 	m.Run()
 }

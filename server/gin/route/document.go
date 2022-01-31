@@ -15,4 +15,8 @@ func AddDocumentRoutes(engine *gin.Engine) {
 		documentRouter.POST("/create", controllers.CreateDocument)
 		documentRouter.DELETE("/:id", controllers.DeleteDocument)
 	}
+	documentQueueRouter := engine.Group("/docQueue")
+	{
+		documentQueueRouter.GET("/", controllers.PutDocumentInQueue)
+	}
 }
